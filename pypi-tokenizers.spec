@@ -4,22 +4,22 @@
 # Using build pattern: pyproject
 #
 Name     : pypi-tokenizers
-Version  : 0.13.2
-Release  : 1
-URL      : https://files.pythonhosted.org/packages/4a/d9/af2821b5934ed871f716eb65fb3bd43e7bc70b99191ec08f20cfd642d0a1/tokenizers-0.13.2.tar.gz
-Source0  : https://files.pythonhosted.org/packages/4a/d9/af2821b5934ed871f716eb65fb3bd43e7bc70b99191ec08f20cfd642d0a1/tokenizers-0.13.2.tar.gz
-Source1  : http://localhost/cgit/vendor/pypi-tokenizers/snapshot/pypi-tokenizers-2023-03-27-17-14-31.tar.xz
+Version  : 0.13.3
+Release  : 2
+URL      : https://files.pythonhosted.org/packages/29/9c/936ebad6dd963616189d6362f4c2c03a0314cf2a221ba15e48dd714d29cf/tokenizers-0.13.3.tar.gz
+Source0  : https://files.pythonhosted.org/packages/29/9c/936ebad6dd963616189d6362f4c2c03a0314cf2a221ba15e48dd714d29cf/tokenizers-0.13.3.tar.gz
+Source1  : http://localhost/cgit/vendor/pypi-tokenizers/snapshot/pypi-tokenizers-2023-06-15-02-45-30.tar.xz
 Summary  : Fast and Customizable Tokenizers
 Group    : Development/Tools
-License  : 0BSD Apache-2.0 BSD-3-Clause BSL-1.0 ICU MIT Unicode-DFS-2016 Unlicense Zlib bzip2-1.0.6
-Requires: pypi-tokenizers-filemap = %{version}-%{release}
-Requires: pypi-tokenizers-lib = %{version}-%{release}
+License  : 0BSD Apache-2.0 BSD-3-Clause BSL-1.0 CC0-1.0 GPL-2.0 ICU MIT Unicode-DFS-2016 Unlicense Zlib bzip2-1.0.6
 Requires: pypi-tokenizers-license = %{version}-%{release}
 Requires: pypi-tokenizers-python = %{version}-%{release}
 Requires: pypi-tokenizers-python3 = %{version}-%{release}
 BuildRequires : buildreq-distutils3
 BuildRequires : pkgconfig(openssl)
+BuildRequires : pypi(setuptools)
 BuildRequires : pypi(setuptools_rust)
+BuildRequires : pypi(wheel)
 BuildRequires : rustc
 # Suppress stripping binaries
 %define __strip /bin/true
@@ -41,24 +41,6 @@ BuildRequires : rustc
 </p>
 <br>
 
-%package filemap
-Summary: filemap components for the pypi-tokenizers package.
-Group: Default
-
-%description filemap
-filemap components for the pypi-tokenizers package.
-
-
-%package lib
-Summary: lib components for the pypi-tokenizers package.
-Group: Libraries
-Requires: pypi-tokenizers-license = %{version}-%{release}
-Requires: pypi-tokenizers-filemap = %{version}-%{release}
-
-%description lib
-lib components for the pypi-tokenizers package.
-
-
 %package license
 Summary: license components for the pypi-tokenizers package.
 Group: Default
@@ -79,7 +61,6 @@ python components for the pypi-tokenizers package.
 %package python3
 Summary: python3 components for the pypi-tokenizers package.
 Group: Default
-Requires: pypi-tokenizers-filemap = %{version}-%{release}
 Requires: python3-core
 Provides: pypi(tokenizers)
 
@@ -88,19 +69,19 @@ python3 components for the pypi-tokenizers package.
 
 
 %prep
-%setup -q -n tokenizers-0.13.2
+%setup -q -n tokenizers-0.13.3
 cd %{_builddir}
-tar xf %{_sourcedir}/pypi-tokenizers-2023-03-27-17-14-31.tar.xz
-cd %{_builddir}/tokenizers-0.13.2
+tar xf %{_sourcedir}/pypi-tokenizers-2023-06-15-02-45-30.tar.xz
+cd %{_builddir}/tokenizers-0.13.3
 mkdir -p ./vendor
-cp -r %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/* %{_builddir}/tokenizers-0.13.2/./vendor
+cp -r %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/* %{_builddir}/tokenizers-0.13.3/./vendor
 mkdir -p .cargo
 echo '[source.crates-io]' >> .cargo/config.toml
 echo 'replace-with = "vendored-sources"' >> .cargo/config.toml
 echo '[source.vendored-sources]' >> .cargo/config.toml
 echo 'directory = "vendor"' >> .cargo/config.toml
 pushd ..
-cp -a tokenizers-0.13.2 buildavx2
+cp -a tokenizers-0.13.3 buildavx2
 popd
 
 %build
@@ -108,15 +89,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1679939928
+export SOURCE_DATE_EPOCH=1687192854
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 -m build --wheel --skip-dependency-check --no-isolation
 pushd ../buildavx2/
@@ -133,426 +114,501 @@ popd
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/pypi-tokenizers
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/adler/LICENSE-0BSD %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3aedaafe8ea8fce424d1df3be32d1b8816944e0e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/adler/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1d47c63586fe3be7f228cff1ab0c029b53741875 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/adler/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ahash/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ahash/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c9c1c33aee599ebfdfb0bc2aed9ea082d9e3173a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/aho-corasick/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/aho-corasick/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/aho-corasick/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ansi_term/LICENCE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7293920aac55f4d275cef83ba10d706585622a53 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/atty/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3acad00f27f89710cd66d3f5528aed5046ac28d9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/autocfg/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/autocfg/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e6d32072ef5f584a805b429ecbd4eec428316dde || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/base64-0.13.1/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/base64-0.13.1/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/b716916e6b0b96af5ecadf1eaee25f966f5d6cb2 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/base64/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/base64/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/b716916e6b0b96af5ecadf1eaee25f966f5d6cb2 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bitflags/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bitflags/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/block-buffer/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/block-buffer/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/aca18f6eebf597377e59fff1f0e6adbadcdcf97b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bumpalo/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bumpalo/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/0a1e89ac22450cb0311baa2613bc21b7131b321f || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/byteorder/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/byteorder/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/byteorder/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bytes/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2510927d07430a2092720e8f4a5287043f75e8d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bzip2-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bzip2-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bzip2-sys/bzip2-1.0.8/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ddf157bc55ed6dec9541e4af796294d666cd0926 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bzip2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/bzip2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cached-path/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cc/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cc/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cfg-if/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cfg-if/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/clap/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2111f90a2fa5afba10ae753c5ca31a1d8080f597 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/console/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a675655c0a9f0bb9c8109678651fe27bceaca04 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/core-foundation-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/core-foundation-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6c2945f449081ab19640fb7c70a081a1a4559399 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/core-foundation/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/core-foundation/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6c2945f449081ab19640fb7c70a081a1a4559399 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cpufeatures/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/cpufeatures/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/388871ab0ab7f8ba6aaa0d444a5153f15c918cdb || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crc32fast/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crc32fast/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8f178d4cc55689ebdd562cabb1282e33bf8f32fe || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-channel/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-channel/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-deque/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-deque/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-epoch/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-epoch/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-utils/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crossbeam-utils/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crypto-common/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/crypto-common/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7ca2c807379211b3ca6b04f10723088ca423c4fe || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/darling/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cc1662c1ffded2451f1b822c62ec085862bd5816 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/darling_core/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cc1662c1ffded2451f1b822c62ec085862bd5816 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/darling_macro/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cc1662c1ffded2451f1b822c62ec085862bd5816 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/derive_builder/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/derive_builder/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c1c71430c0885114ef42fc256b803241cdcf898 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/derive_builder_core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/derive_builder_core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c1c71430c0885114ef42fc256b803241cdcf898 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/digest/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/digest/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9c6e81caeb170dd5501d39895df9efb657c3c86b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/dirs-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/43a3a49bd7af636c923a5ae475395b8e29320529 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/dirs-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cf762fa3609793d5639ba9e1cbd254db276f50d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/dirs/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/43a3a49bd7af636c923a5ae475395b8e29320529 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/dirs/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cf762fa3609793d5639ba9e1cbd254db276f50d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/either/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/either/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/encode_unicode/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/encode_unicode/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/188be4108decf997e0edd21c6dd83deaf320f255 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/encoding_rs/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/encoding_rs/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/b4872d72eb3ccfa74730cc229184eec04f303e7d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/encoding_rs/LICENSE-WHATWG %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1e35cd39af07e5460de3011d5ef8f6a775ee54ae || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/env_logger/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/env_logger/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/errno-dragonfly/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/73724f22eb580e208c5af2e3d089be349209e847 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/errno/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/errno/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7a842f34e127456338641b14c7a00ec246d89fb6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/esaxx-rs/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/fastrand/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/fastrand/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/filetime/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/filetime/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/flate2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/flate2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/fnv/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/fnv/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/50121d8b8c9f6483fe17ea679f28f85fe59b2a5a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/foreign-types-shared/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/foreign-types-shared/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/bee28506691ec4e9291da8a55a450cb5304d3f5d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/foreign-types/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/foreign-types/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/bee28506691ec4e9291da8a55a450cb5304d3f5d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/form_urlencoded/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/form_urlencoded/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/738188f5fed28a950b0fede659706238ec35f8bb || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/fs2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/fs2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-channel/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-channel/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-io/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-io/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-sink/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-sink/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-task/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-task/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-util/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/futures-util/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/generic-array/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cb74eb831db08b7fe98f84b59c9bda195e5a3588 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/getrandom/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e9b475b5dccf14bd66d72dd12a04db75eaad1a9e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/getrandom/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/glob/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/glob/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/h2/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/072741b191e599c01d8136fd14030bdcdb906e62 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hashbrown/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hashbrown/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c9c1c33aee599ebfdfb0bc2aed9ea082d9e3173a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hermit-abi-0.1.19/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hermit-abi-0.1.19/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hermit-abi-0.2.6/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hermit-abi-0.2.6/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hermit-abi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hermit-abi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/http-body/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8e75077dab38548245db65153967207be8c3ce88 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/http/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ebc84230d16898593f0c90479ac9ee5576d7cc65 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/http/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/fa284d19a6ac85562019f93110d4338e53de654b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/httparse/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/httparse/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1de935a6c7ea6a2196a49062d498cb04a7f5baea || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/httpdate/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1726596c1cc6c65d3a272abc337b13936430cf96 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/httpdate/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f516ded20090880b5bb281ad2f9dde3d94e9e369 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/humantime/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/humantime/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff432d95fdfee3587e45abd61685c2209d245901 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hyper-tls/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hyper-tls/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a57300a26ebca63115ba199262d83ec3630788b7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/hyper/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f8cc03f90ea18587a80a23486a64f129260a3034 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ident_case/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/218fc8c15534e8840cbff5801582c450c97869ab || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/idna/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/idna/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a81399b7c3ec2d4619848fd59c11d21211fc3b86 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/indexmap/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/indexmap/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7e5936a6fa3cf3518c01cec41345adf27399fe12 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/indicatif-0.15.0/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a675655c0a9f0bb9c8109678651fe27bceaca04 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/indicatif/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a675655c0a9f0bb9c8109678651fe27bceaca04 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/indoc/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/indoc/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/instant/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/037192733999bccd7ed8d75123b7ec09feb4a12d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/io-lifetimes/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/io-lifetimes/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/io-lifetimes/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ipnet/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/bb92c62835916e922667b4fe181beed0e6efca91 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ipnet/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4f8ab673f6e2ae6c7bb2910d7f38838c18c12178 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/itertools-0.8.2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/itertools-0.8.2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/itertools/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/itertools/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/itoa/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/itoa/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/js-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/js-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/lazy_static/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/lazy_static/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/libc/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/libc/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/36d69bcb88153a640740000efe933b009420ce7e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/linux-raw-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/linux-raw-sys/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/linux-raw-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/lock_api/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/lock_api/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/log/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/aca374a3362a76702c50bd4e7d590a57f8834fc7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/log/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f9cc84dfc567fdc0979fddc3e6257191d8ebc9d8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/macro_rules_attribute-proc_macro/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60146279cd817681c6ff6d37b99abfdc979b2b32 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/macro_rules_attribute-proc_macro/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e055f1174d0221ea06972dc97b9d93afe08af1d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/macro_rules_attribute/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60146279cd817681c6ff6d37b99abfdc979b2b32 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/macro_rules_attribute/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e055f1174d0221ea06972dc97b9d93afe08af1d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/matrixmultiply-0.2.4/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/matrixmultiply-0.2.4/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3bdce0683ebc036dfcc97c65499ccd030c2f1f0d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/matrixmultiply/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/matrixmultiply/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3acde0578c32e432e7c72e1fd5f1a92553647873 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/memchr/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/memchr/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/memchr/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/memoffset-0.6.5/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/02bf11a87b9bbacedf2fcf4856af3b933faef82e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/memoffset/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/02bf11a87b9bbacedf2fcf4856af3b933faef82e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/mime/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/mime/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/0bc96c09b4b9635b10d73949dd06e92f22193c04 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/minimal-lexical/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5feaf15b3fa7d2d226d811e5fcd49098a1ea520c || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/minimal-lexical/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/minimal-lexical/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cd3fe820606ed34ac2591caf068c7cabd3ab3509 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/miniz_oxide/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/18d7fe3c54698817feec1f2e04a9d5a0f046a80c || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/miniz_oxide/LICENSE-APACHE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/598f87f072f66e2269dd6919292b2934dbb20492 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/miniz_oxide/LICENSE-MIT.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/18d7fe3c54698817feec1f2e04a9d5a0f046a80c || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/miniz_oxide/LICENSE-ZLIB.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/11f0f1bee61ba6393c3dc7aefee7b92b604ff6c0 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/mio/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/27541df8e6d877c3912bbe4c48711f36e826cc5b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/native-tls/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/native-tls/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/989c2981fcb981c61409ea38fa8d70cf5e6fd130 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ndarray-0.13.1/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/aca374a3362a76702c50bd4e7d590a57f8834fc7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ndarray-0.13.1/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2a3318d3dc04226b8d24f0a3f4317d4701970001 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ndarray/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ndarray/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70698c5cd94e53fcb69e4c61fc7e87d9f559c3fb || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/nom/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/27ea6989d4f34b7b944eb884410a31ae20d11686 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-complex-0.2.4/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-complex-0.2.4/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-complex/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-complex/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-integer/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-integer/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-traits/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num-traits/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num_cpus/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/num_cpus/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ec9737a4e769cce48d5c95d9c75a4ba5f29a2563 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/number_prefix-0.3.0/LICENCE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d2cf9694021d7797696471bd8410ee4b83b0a93b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/once_cell/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/once_cell/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/onig/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f0e5967a26ecb154498e63518d58e923803cfbd5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/onig_sys/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/056be0a11583e26e88ede27601dff342dcaa07c5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/onig_sys/oniguruma/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/061a5f18d5b7a5fe6a1da9419bef05b7d35f7cf6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/openssl-macros/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/openssl-macros/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/245c1d51cca7faae2e37a0e0c681efb8aa42bccf || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/openssl-probe/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/openssl-probe/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/openssl-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/openssl/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ffd5a0caea8a089d58fb6acf5a4714dffb06d0dc || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/parking_lot/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/parking_lot/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/parking_lot_core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/parking_lot_core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/paste/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/paste/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/percent-encoding/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/percent-encoding/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a81399b7c3ec2d4619848fd59c11d21211fc3b86 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pin-project-lite/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/598f87f072f66e2269dd6919292b2934dbb20492 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pin-project-lite/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pin-utils/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a2f60339450a52e61c6c1e27dc44bd1e671ad28e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pin-utils/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/91abce61ea0c1c313bb5ba31f04196490960a479 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pkg-config/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pkg-config/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ppv-lite86/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/088830dcb78eba1a2052df69bd5cba5445e8f2d7 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ppv-lite86/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e1c86f32641f01a5b85d6e9b20138e8470b883fc || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/proc-macro2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/proc-macro2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pyo3-build-config/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pyo3-macros-backend/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pyo3-macros/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/pyo3/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/quick-error/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/quick-error/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1a00693a4e6240a4d040d1a1f76efaf50f20b8dd || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/quote/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/quote/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4632a631b427f005d97734ea8c6a44090fec5cd9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand_chacha/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand_chacha/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e9b475b5dccf14bd66d72dd12a04db75eaad1a9e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand_chacha/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand_core/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rand_core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rawpointer/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rawpointer/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rayon-cond/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rayon-cond/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e6d32072ef5f584a805b429ecbd4eec428316dde || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rayon-core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rayon-core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rayon/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rayon/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/redox_syscall/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a00165152c82ea55b9fc254890dc8860c25e3bb6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/redox_users/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c56bd0668edca4d06b6cd881d4d2839da53058cd || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/regex-syntax/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/regex-syntax/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/regex-syntax/src/unicode_tables/LICENSE-UNICODE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/68d12a03b339648117165b9c021b93f26974d6f6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/regex/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/regex/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/regex/src/testdata/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/553e82bef8637312393c95bc62e23e8f81fd9e47 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/reqwest/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ca1270b9301efec88cf93f1e87d561e998dff516 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/reqwest/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/74b517ee278c2f4460fb9a56d63788ebab959aab || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rustix/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rustix/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/rustix/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ryu/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/ryu/LICENSE-BOOST %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3cba29011be2b9d59f6204d6fa0a386b1b2dbd90 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/schannel/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/08381cf9c28c849a083290a141b9889f68aa475d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/scopeguard/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/scopeguard/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f498d95a48889a0b1432e420e6754881eff1d593 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/security-framework-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/security-framework-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5becf37b1a9807dc865494df19859a5bf9fb2201 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/security-framework/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/security-framework/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5becf37b1a9807dc865494df19859a5bf9fb2201 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde_derive/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde_derive/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde_json/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde_json/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde_urlencoded/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/serde_urlencoded/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5b8cd81865a6f648fad5fe9cff67cc993096f37c || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/sha2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/sha2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1741e5596832e62cd0791301fc9dcf4b9d0bc2c9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/slab/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/96f019e8abadc7a87b330a697504d874a1c06268 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/smallvec/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/smallvec/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c61640f6c218caf86d1b8072e09668a8362dba04 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/socket2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/socket2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/spm_precompiled/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/strsim-0.8.0/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/14be3fb1db517b371b463625246427013600f126 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/strsim/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/14be3fb1db517b371b463625246427013600f126 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/syn-1.0.109/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/syn-1.0.109/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/syn/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/syn/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tar/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tar/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/target-lexicon/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tempfile/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tempfile/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70693ba8757c4a17af68e39ab32e4e0d4a389416 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/termcolor/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/termcolor/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/termcolor/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/textwrap/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70e36c2f54755e87728778c41ab4b809e5b0b502 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/thiserror-impl/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/thiserror-impl/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/thiserror/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/thiserror/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/time/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/time/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tinyvec/LICENSE-APACHE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/47b573e3824cd5e02a1a3ae99e2735b49e0256e4 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tinyvec/LICENSE-MIT.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ee70bf5efb387a6c52c0f5cbea4122c6a74a57bb || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tinyvec/LICENSE-ZLIB.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/59b5efd50c4508e7fa74828e7469187bbe5bd864 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tinyvec_macros/LICENSE-APACHE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8cc042e8e4b82c5532c72172a1988a74a599d4b5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tinyvec_macros/LICENSE-MIT.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/86d193cb6b24df990cbbaf67c6a24fddbcb574c1 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tokio-native-tls/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3c8e7847ca19c2bb00f4100c725810c04a1b56d6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tokio-util/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9e4ed0e5d74379ec227eefa28c8fbf66c964cf13 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tokio/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9e4ed0e5d74379ec227eefa28c8fbf66c964cf13 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tower-service/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e91bf1be869de7307c2165260d999f8316d92b8c || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tracing-core/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3c8e7847ca19c2bb00f4100c725810c04a1b56d6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tracing-core/src/spin/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/0956f8ac49e23a546fb113f711d7cdc0c3e98c85 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/tracing/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3c8e7847ca19c2bb00f4100c725810c04a1b56d6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/try-lock/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/06f8f927b328e958b3c1a5e3ee3cf927e6ac17ef || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/typenum/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/481e4be7d70c11ee3f6e04a59a0e5afccc551db2 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/typenum/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/69facfd64b2a7aa4a22c917ef10cd96e41b75b87 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/typenum/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5984f5244c7bc13bf15a5bea823c04ec0bbc714f || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-bidi/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/871b9912ab96cf7d79cb8ae83ca0b08cd5d0cbfd || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-bidi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-bidi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-ident/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-ident/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-ident/LICENSE-UNICODE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/583a5eebcf6119730bd96922e8a0faecf7faf720 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-normalization-alignments/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-normalization-alignments/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-normalization-alignments/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-normalization/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-normalization/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-normalization/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-segmentation/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-segmentation/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-segmentation/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-width/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-width/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode-width/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode_categories/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unicode_categories/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d27ef3ee8c433e848ca41075d018a1ad707e3c49 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unindent/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/unindent/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/url/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/url/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a81399b7c3ec2d4619848fd59c11d21211fc3b86 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/vcpkg/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f85f58f2b17e35a1c2fd852cd58e5bae165ebea9 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/vcpkg/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3ede8a2ceb97cd197183b1a9d7958b57cea01e14 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/vec_map/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5feaf15b3fa7d2d226d811e5fcd49098a1ea520c || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/vec_map/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/version_check/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/version_check/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cfcb552ef0afbe7ccb4128891c0de00685988a4b || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/want/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e9b66aefa3fef917a79b26ebc576b8e8e969a4e8 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasi-0.10.0+wasi-snapshot-preview1/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasi-0.10.0+wasi-snapshot-preview1/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasi-0.10.0+wasi-snapshot-preview1/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasi/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-backend/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-backend/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-futures/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-futures/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-macro-support/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-macro-support/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-macro/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-macro/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-shared/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen-shared/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/wasm-bindgen/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/web-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/web-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/winapi-util/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/winapi-util/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2ad1215c12bd0a3492399dc438aa63084323c662 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/winapi-util/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/winapi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/92170cdc034b2ff819323ff670d3b7266c8bffcd || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/winapi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2243f7a86daaa727d34d92e987a741036f288464 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows-sys-0.42.0/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows-sys-0.42.0/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows-sys/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows-sys/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows-targets/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows-targets/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_aarch64_gnullvm/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_aarch64_gnullvm/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_aarch64_msvc/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_aarch64_msvc/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_i686_gnu/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_i686_gnu/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_i686_msvc/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_i686_msvc/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_x86_64_gnu/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_x86_64_gnu/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_x86_64_gnullvm/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_x86_64_gnullvm/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_x86_64_msvc/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/windows_x86_64_msvc/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/winreg/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e952409591eb40fe31b1e43ab9bf11d27000a9c0 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/xattr/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/xattr/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70693ba8757c4a17af68e39ab32e4e0d4a389416 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/zip-extensions/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3959acff889bf66bff1630df10056501ca03dae2 || :
-cp %{_builddir}/pypi-tokenizers-2023-03-27-17-14-31/zip/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/42631684b818350022ee962eef0a9592b159d838 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/adler/LICENSE-0BSD %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3aedaafe8ea8fce424d1df3be32d1b8816944e0e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/adler/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1d47c63586fe3be7f228cff1ab0c029b53741875 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/adler/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aes/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aes/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d4fd358c142c0ce7553ff8266b871bae99e3052c || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aho-corasick-0.7.20/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aho-corasick-0.7.20/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aho-corasick-0.7.20/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aho-corasick/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aho-corasick/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/aho-corasick/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstream/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstream/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4dbe8833d0189c691b308c3dd40fab84ef2e9630 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle-parse/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/92170cdc034b2ff819323ff670d3b7266c8bffcd || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle-parse/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/64a8c11fd0f3068e743bfc681bcbef4f50a6b779 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle-query/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle-query/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4dbe8833d0189c691b308c3dd40fab84ef2e9630 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle-wincon/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle-wincon/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/33dbd2d99ad231460bbb01812a52c85e577bd9ba || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/anstyle/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f911b0506e6ba6a56b4edac717b461799f380ef0 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/atty/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3acad00f27f89710cd66d3f5528aed5046ac28d9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/autocfg/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/autocfg/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e6d32072ef5f584a805b429ecbd4eec428316dde || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/base64-0.13.1/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/base64-0.13.1/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/b716916e6b0b96af5ecadf1eaee25f966f5d6cb2 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/base64/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/base64/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/b716916e6b0b96af5ecadf1eaee25f966f5d6cb2 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/base64ct/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/base64ct/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/deea46b4a459a162af77a2b242e6b93a3c1db2f5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bitflags/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bitflags/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/block-buffer/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/block-buffer/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/aca18f6eebf597377e59fff1f0e6adbadcdcf97b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bumpalo/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bumpalo/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/0a1e89ac22450cb0311baa2613bc21b7131b321f || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/byteorder/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/byteorder/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/byteorder/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bytes/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2510927d07430a2092720e8f4a5287043f75e8d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bzip2-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bzip2-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bzip2-sys/bzip2-1.0.8/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ddf157bc55ed6dec9541e4af796294d666cd0926 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bzip2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/bzip2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cached-path/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cc/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cc/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cfg-if/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cfg-if/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cipher/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cipher/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/708e756c9120bcaf2c0a1d240b2418ee908e2d87 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4dbe8833d0189c691b308c3dd40fab84ef2e9630 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap_builder/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap_builder/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8fe88f09d35c6054e0a780a793833c16fb888168 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap_derive/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap_derive/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8fe88f09d35c6054e0a780a793833c16fb888168 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap_lex/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/clap_lex/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8fe88f09d35c6054e0a780a793833c16fb888168 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/colorchoice/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/colorchoice/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4dbe8833d0189c691b308c3dd40fab84ef2e9630 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/console/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a675655c0a9f0bb9c8109678651fe27bceaca04 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/constant_time_eq/LICENSE.txt %{buildroot}/usr/share/package-licenses/pypi-tokenizers/82da472f6d00dc5f0a651f33ebb320aa9c7b08d0 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/core-foundation-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/core-foundation-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6c2945f449081ab19640fb7c70a081a1a4559399 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/core-foundation/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/core-foundation/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6c2945f449081ab19640fb7c70a081a1a4559399 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cpufeatures/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/cpufeatures/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/388871ab0ab7f8ba6aaa0d444a5153f15c918cdb || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crc32fast/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crc32fast/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8f178d4cc55689ebdd562cabb1282e33bf8f32fe || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-channel/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-channel/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-deque/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-deque/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-epoch/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-epoch/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-utils/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crossbeam-utils/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crypto-common/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/crypto-common/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7ca2c807379211b3ca6b04f10723088ca423c4fe || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/darling/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cc1662c1ffded2451f1b822c62ec085862bd5816 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/darling_core/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cc1662c1ffded2451f1b822c62ec085862bd5816 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/darling_macro/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cc1662c1ffded2451f1b822c62ec085862bd5816 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/derive_builder/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/derive_builder/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c1c71430c0885114ef42fc256b803241cdcf898 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/derive_builder_core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/derive_builder_core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c1c71430c0885114ef42fc256b803241cdcf898 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/derive_builder_macro/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/derive_builder_macro/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c1c71430c0885114ef42fc256b803241cdcf898 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/digest/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/digest/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9c6e81caeb170dd5501d39895df9efb657c3c86b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/dirs-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/43a3a49bd7af636c923a5ae475395b8e29320529 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/dirs-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cf762fa3609793d5639ba9e1cbd254db276f50d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/dirs/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/43a3a49bd7af636c923a5ae475395b8e29320529 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/dirs/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cf762fa3609793d5639ba9e1cbd254db276f50d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/either/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/either/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/encode_unicode/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/encode_unicode/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/188be4108decf997e0edd21c6dd83deaf320f255 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/encoding_rs/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/encoding_rs/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/b4872d72eb3ccfa74730cc229184eec04f303e7d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/encoding_rs/LICENSE-WHATWG %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1e35cd39af07e5460de3011d5ef8f6a775ee54ae || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/env_logger/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/env_logger/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/errno-dragonfly/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/73724f22eb580e208c5af2e3d089be349209e847 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/errno/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/errno/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7a842f34e127456338641b14c7a00ec246d89fb6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/esaxx-rs/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/fastrand/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/fastrand/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/filetime/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/filetime/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/flate2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/flate2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/fnv/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/fnv/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/50121d8b8c9f6483fe17ea679f28f85fe59b2a5a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/foreign-types-shared/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/foreign-types-shared/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/bee28506691ec4e9291da8a55a450cb5304d3f5d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/foreign-types/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/foreign-types/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/bee28506691ec4e9291da8a55a450cb5304d3f5d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/form_urlencoded/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/form_urlencoded/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/738188f5fed28a950b0fede659706238ec35f8bb || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/fs2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/fs2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-channel/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-channel/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-io/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-io/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-sink/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-sink/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-task/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-task/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-util/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/futures-util/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/067f31555f328efb78075174add7db97d98618c6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/generic-array/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cb74eb831db08b7fe98f84b59c9bda195e5a3588 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/getrandom/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e9b475b5dccf14bd66d72dd12a04db75eaad1a9e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/getrandom/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/glob/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/glob/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/h2/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/072741b191e599c01d8136fd14030bdcdb906e62 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hashbrown/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hashbrown/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c9c1c33aee599ebfdfb0bc2aed9ea082d9e3173a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/heck/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/heck/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hermit-abi-0.1.19/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hermit-abi-0.1.19/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hermit-abi-0.2.6/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hermit-abi-0.2.6/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hermit-abi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hermit-abi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hmac/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hmac/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9c6e81caeb170dd5501d39895df9efb657c3c86b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/http-body/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8e75077dab38548245db65153967207be8c3ce88 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/http/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ebc84230d16898593f0c90479ac9ee5576d7cc65 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/http/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/fa284d19a6ac85562019f93110d4338e53de654b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/httparse/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/httparse/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1de935a6c7ea6a2196a49062d498cb04a7f5baea || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/httpdate/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1726596c1cc6c65d3a272abc337b13936430cf96 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/httpdate/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f516ded20090880b5bb281ad2f9dde3d94e9e369 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/humantime/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/humantime/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff432d95fdfee3587e45abd61685c2209d245901 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hyper-tls/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hyper-tls/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a57300a26ebca63115ba199262d83ec3630788b7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/hyper/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f8cc03f90ea18587a80a23486a64f129260a3034 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ident_case/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/218fc8c15534e8840cbff5801582c450c97869ab || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/idna/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/idna/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a81399b7c3ec2d4619848fd59c11d21211fc3b86 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/indexmap/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/indexmap/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7e5936a6fa3cf3518c01cec41345adf27399fe12 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/indicatif-0.15.0/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a675655c0a9f0bb9c8109678651fe27bceaca04 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/indicatif/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a675655c0a9f0bb9c8109678651fe27bceaca04 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/indoc/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/indoc/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/inout/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/instant/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/037192733999bccd7ed8d75123b7ec09feb4a12d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/io-lifetimes/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/io-lifetimes/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/io-lifetimes/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ipnet/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/bb92c62835916e922667b4fe181beed0e6efca91 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ipnet/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4f8ab673f6e2ae6c7bb2910d7f38838c18c12178 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/is-terminal/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/is-terminal/LICENSE-MIT-atty %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ffe3aa1f76c00b737c79c3a17b9e30163a936bc0 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/itertools-0.8.2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/itertools-0.8.2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/itertools/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/itertools/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/itoa/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/itoa/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/jobserver/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/jobserver/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/js-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/js-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/lazy_static/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/lazy_static/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/libc/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/libc/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/36d69bcb88153a640740000efe933b009420ce7e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/linux-raw-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/linux-raw-sys/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/linux-raw-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/lock_api/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/lock_api/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/log/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/log/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/macro_rules_attribute-proc_macro/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60146279cd817681c6ff6d37b99abfdc979b2b32 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/macro_rules_attribute-proc_macro/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e055f1174d0221ea06972dc97b9d93afe08af1d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/macro_rules_attribute/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60146279cd817681c6ff6d37b99abfdc979b2b32 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/macro_rules_attribute/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e055f1174d0221ea06972dc97b9d93afe08af1d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/matrixmultiply-0.2.4/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/matrixmultiply-0.2.4/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3bdce0683ebc036dfcc97c65499ccd030c2f1f0d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/matrixmultiply/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/matrixmultiply/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f6f1c63a464536513df4052c4851922ade5adfed || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/memchr/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/memchr/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/memchr/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/memoffset-0.8.0/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/02bf11a87b9bbacedf2fcf4856af3b933faef82e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/memoffset/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/02bf11a87b9bbacedf2fcf4856af3b933faef82e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/mime/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/mime/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/0bc96c09b4b9635b10d73949dd06e92f22193c04 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/minimal-lexical/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5feaf15b3fa7d2d226d811e5fcd49098a1ea520c || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/minimal-lexical/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/minimal-lexical/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cd3fe820606ed34ac2591caf068c7cabd3ab3509 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/miniz_oxide/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/18d7fe3c54698817feec1f2e04a9d5a0f046a80c || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/miniz_oxide/LICENSE-APACHE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/598f87f072f66e2269dd6919292b2934dbb20492 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/miniz_oxide/LICENSE-MIT.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/18d7fe3c54698817feec1f2e04a9d5a0f046a80c || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/miniz_oxide/LICENSE-ZLIB.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/11f0f1bee61ba6393c3dc7aefee7b92b604ff6c0 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/mio/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/27541df8e6d877c3912bbe4c48711f36e826cc5b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/monostate-impl/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/monostate-impl/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/monostate/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/monostate/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/native-tls/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/native-tls/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/989c2981fcb981c61409ea38fa8d70cf5e6fd130 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ndarray-0.13.1/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/aca374a3362a76702c50bd4e7d590a57f8834fc7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ndarray-0.13.1/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2a3318d3dc04226b8d24f0a3f4317d4701970001 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ndarray/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ndarray/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70698c5cd94e53fcb69e4c61fc7e87d9f559c3fb || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/nom/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/27ea6989d4f34b7b944eb884410a31ae20d11686 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-complex-0.2.4/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-complex-0.2.4/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-complex/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-complex/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-integer/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-integer/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-traits/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num-traits/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num_cpus/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/num_cpus/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ec9737a4e769cce48d5c95d9c75a4ba5f29a2563 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/number_prefix-0.3.0/LICENCE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d2cf9694021d7797696471bd8410ee4b83b0a93b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/once_cell/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/once_cell/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/onig/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f0e5967a26ecb154498e63518d58e923803cfbd5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/onig_sys/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/056be0a11583e26e88ede27601dff342dcaa07c5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/onig_sys/oniguruma/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/061a5f18d5b7a5fe6a1da9419bef05b7d35f7cf6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/openssl-macros/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/openssl-macros/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/245c1d51cca7faae2e37a0e0c681efb8aa42bccf || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/openssl-probe/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/openssl-probe/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/openssl-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/openssl/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ffd5a0caea8a089d58fb6acf5a4714dffb06d0dc || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/parking_lot/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/parking_lot/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/parking_lot_core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/parking_lot_core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/password-hash/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/paste/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/paste/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pbkdf2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/percent-encoding/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/percent-encoding/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a81399b7c3ec2d4619848fd59c11d21211fc3b86 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pin-project-lite/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/598f87f072f66e2269dd6919292b2934dbb20492 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pin-project-lite/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pin-utils/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a2f60339450a52e61c6c1e27dc44bd1e671ad28e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pin-utils/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/91abce61ea0c1c313bb5ba31f04196490960a479 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pkg-config/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pkg-config/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ppv-lite86/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/088830dcb78eba1a2052df69bd5cba5445e8f2d7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ppv-lite86/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e1c86f32641f01a5b85d6e9b20138e8470b883fc || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/proc-macro2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/proc-macro2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pyo3-build-config/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pyo3-macros-backend/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pyo3-macros/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/pyo3/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5bb5828e544f63bd76c1b7112981a1ad86ae77f9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/quick-error/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/quick-error/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1a00693a4e6240a4d040d1a1f76efaf50f20b8dd || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/quote/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/quote/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4632a631b427f005d97734ea8c6a44090fec5cd9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand_chacha/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand_chacha/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e9b475b5dccf14bd66d72dd12a04db75eaad1a9e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand_chacha/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand_core/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rand_core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rawpointer/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rawpointer/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rayon-cond/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rayon-cond/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e6d32072ef5f584a805b429ecbd4eec428316dde || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rayon-core/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rayon-core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rayon/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rayon/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/redox_syscall-0.2.16/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a00165152c82ea55b9fc254890dc8860c25e3bb6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/redox_syscall/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a00165152c82ea55b9fc254890dc8860c25e3bb6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/redox_users/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c56bd0668edca4d06b6cd881d4d2839da53058cd || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex-syntax-0.6.29/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex-syntax-0.6.29/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex-syntax-0.6.29/src/unicode_tables/LICENSE-UNICODE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/68d12a03b339648117165b9c021b93f26974d6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex-syntax/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex-syntax/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex-syntax/src/unicode_tables/LICENSE-UNICODE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/68d12a03b339648117165b9c021b93f26974d6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9f3c36d2b7d381d9cf382a00166f3fbd06783636 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/regex/src/testdata/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/553e82bef8637312393c95bc62e23e8f81fd9e47 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/reqwest/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ca1270b9301efec88cf93f1e87d561e998dff516 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/reqwest/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/74b517ee278c2f4460fb9a56d63788ebab959aab || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rustc-hash/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rustc-hash/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rustix/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rustix/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/rustix/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ryu/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/ryu/LICENSE-BOOST %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3cba29011be2b9d59f6204d6fa0a386b1b2dbd90 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/schannel/LICENSE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/08381cf9c28c849a083290a141b9889f68aa475d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/scopeguard/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/scopeguard/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f498d95a48889a0b1432e420e6754881eff1d593 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/security-framework-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/security-framework-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5becf37b1a9807dc865494df19859a5bf9fb2201 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/security-framework/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/security-framework/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5becf37b1a9807dc865494df19859a5bf9fb2201 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde_derive/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde_derive/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde_json/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde_json/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde_urlencoded/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/serde_urlencoded/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5b8cd81865a6f648fad5fe9cff67cc993096f37c || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/sha1/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/sha1/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1741e5596832e62cd0791301fc9dcf4b9d0bc2c9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/sha2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/422e6fd980775f9997ed6735c28a14ad20c222e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/sha2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1741e5596832e62cd0791301fc9dcf4b9d0bc2c9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/slab/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/96f019e8abadc7a87b330a697504d874a1c06268 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/smallvec/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/smallvec/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/c61640f6c218caf86d1b8072e09668a8362dba04 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/socket2/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/socket2/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/spm_precompiled/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/strsim/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f5feee4154156527645a9b18ef29da23fc859ca9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/subtle/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/145c27c874c444c902ad2af6164fcc30231fa7a8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/syn-1.0.109/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/syn-1.0.109/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/syn/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/syn/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tar/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tar/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/target-lexicon/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tempfile/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tempfile/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70693ba8757c4a17af68e39ab32e4e0d4a389416 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/termcolor/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/termcolor/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/termcolor/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/thiserror-impl/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/thiserror-impl/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/thiserror/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/thiserror/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/time-core/LICENSE-Apache %{buildroot}/usr/share/package-licenses/pypi-tokenizers/13f55d9b7b3a769d76eab5d4a096f7ff24a017be || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/time-core/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ffffe83fef2bd6576c95e851bc81e1f6a641d638 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/time/LICENSE-Apache %{buildroot}/usr/share/package-licenses/pypi-tokenizers/13f55d9b7b3a769d76eab5d4a096f7ff24a017be || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/time/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ffffe83fef2bd6576c95e851bc81e1f6a641d638 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tinyvec/LICENSE-APACHE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/47b573e3824cd5e02a1a3ae99e2735b49e0256e4 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tinyvec/LICENSE-MIT.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ee70bf5efb387a6c52c0f5cbea4122c6a74a57bb || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tinyvec/LICENSE-ZLIB.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/59b5efd50c4508e7fa74828e7469187bbe5bd864 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tinyvec_macros/LICENSE-APACHE.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/8cc042e8e4b82c5532c72172a1988a74a599d4b5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tinyvec_macros/LICENSE-MIT.md %{buildroot}/usr/share/package-licenses/pypi-tokenizers/86d193cb6b24df990cbbaf67c6a24fddbcb574c1 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tokio-native-tls/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3c8e7847ca19c2bb00f4100c725810c04a1b56d6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tokio-util/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9e4ed0e5d74379ec227eefa28c8fbf66c964cf13 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tokio/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/9e4ed0e5d74379ec227eefa28c8fbf66c964cf13 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tower-service/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e91bf1be869de7307c2165260d999f8316d92b8c || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tracing-core/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3c8e7847ca19c2bb00f4100c725810c04a1b56d6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tracing-core/src/spin/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/0956f8ac49e23a546fb113f711d7cdc0c3e98c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/tracing/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3c8e7847ca19c2bb00f4100c725810c04a1b56d6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/try-lock/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/06f8f927b328e958b3c1a5e3ee3cf927e6ac17ef || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/typenum/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/481e4be7d70c11ee3f6e04a59a0e5afccc551db2 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/typenum/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/69facfd64b2a7aa4a22c917ef10cd96e41b75b87 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/typenum/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5984f5244c7bc13bf15a5bea823c04ec0bbc714f || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-bidi/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/871b9912ab96cf7d79cb8ae83ca0b08cd5d0cbfd || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-bidi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-bidi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-ident/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-ident/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-ident/LICENSE-UNICODE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/583a5eebcf6119730bd96922e8a0faecf7faf720 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-normalization-alignments/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-normalization-alignments/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-normalization-alignments/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-normalization/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-normalization/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-normalization/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-segmentation/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-segmentation/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-segmentation/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-width/COPYRIGHT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5ed53061419caf64f84d064f3641392a2a10fa7f || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-width/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode-width/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode_categories/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unicode_categories/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d27ef3ee8c433e848ca41075d018a1ad707e3c49 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unindent/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/unindent/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/url/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/url/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a81399b7c3ec2d4619848fd59c11d21211fc3b86 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/utf8parse/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/utf8parse/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/93074692b8a28bef1743c44a9e5b97b1401c0d09 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/vcpkg/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f85f58f2b17e35a1c2fd852cd58e5bae165ebea9 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/vcpkg/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3ede8a2ceb97cd197183b1a9d7958b57cea01e14 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/version_check/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/version_check/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/cfcb552ef0afbe7ccb4128891c0de00685988a4b || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/want/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e9b66aefa3fef917a79b26ebc576b8e8e969a4e8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasi/LICENSE-Apache-2.0_WITH_LLVM-exception %{buildroot}/usr/share/package-licenses/pypi-tokenizers/f137043e018f2024e0414a9153ea728c203ae8e5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ce3a2603094e799f42ce99c40941544dfcc5c4a5 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-backend/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-backend/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-futures/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-futures/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-macro-support/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-macro-support/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-macro/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-macro/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-shared/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen-shared/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/wasm-bindgen/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/web-sys/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/web-sys/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/winapi-util/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/winapi-util/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2ad1215c12bd0a3492399dc438aa63084323c662 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/winapi-util/UNLICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/winapi/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/92170cdc034b2ff819323ff670d3b7266c8bffcd || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/winapi/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/2243f7a86daaa727d34d92e987a741036f288464 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-sys-0.42.0/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-sys-0.42.0/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-sys-0.45.0/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-sys-0.45.0/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-sys/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-sys/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-targets-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-targets-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-targets/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows-targets/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_gnullvm-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_gnullvm-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_gnullvm/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_gnullvm/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_msvc-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_msvc-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_msvc/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_aarch64_msvc/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_gnu-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_gnu-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_gnu/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_gnu/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_msvc-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_msvc-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_msvc/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_i686_msvc/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnu-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnu-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnu/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnu/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnullvm-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnullvm-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnullvm/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_gnullvm/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_msvc-0.42.2/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_msvc-0.42.2/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_msvc/license-apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a3b3a65335e78bde163f84d599fa899776552994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/windows_x86_64_msvc/license-mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/winreg/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/e952409591eb40fe31b1e43ab9bf11d27000a9c0 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/xattr/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5798832c31663cedc1618d18544d445da0295229 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/xattr/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/70693ba8757c4a17af68e39ab32e4e0d4a389416 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zip/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/42631684b818350022ee962eef0a9592b159d838 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-safe/LICENSE.Apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/598f87f072f66e2269dd6919292b2934dbb20492 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-safe/LICENSE.Mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7ed72f0e5fc0e0a58f758f7ac73425dc073732c7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-sys/LICENSE.Apache-2.0 %{buildroot}/usr/share/package-licenses/pypi-tokenizers/598f87f072f66e2269dd6919292b2934dbb20492 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-sys/LICENSE.BSD-3-Clause %{buildroot}/usr/share/package-licenses/pypi-tokenizers/28179ca174aa05f0650753d07751af071cf5ec61 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-sys/LICENSE.Mit %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7ed72f0e5fc0e0a58f758f7ac73425dc073732c7 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-sys/zstd/COPYING %{buildroot}/usr/share/package-licenses/pypi-tokenizers/1d8c93712cbc9117a9e55a7ff86cebd066c8bfd8 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd-sys/zstd/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/d5e630eee1d3500039f2e16bed21d0f0cd580994 || :
+cp %{_builddir}/pypi-tokenizers-2023-06-15-02-45-30/zstd/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7ed72f0e5fc0e0a58f758f7ac73425dc073732c7 || :
+cp %{_builddir}/tokenizers-%{version}/tokenizers-lib/LICENSE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d || :
 cp %{_builddir}/tokenizers-%{version}/tokenizers-lib/examples/unstable_wasm/www/LICENSE-APACHE %{buildroot}/usr/share/package-licenses/pypi-tokenizers/5feaf15b3fa7d2d226d811e5fcd49098a1ea520c || :
 cp %{_builddir}/tokenizers-%{version}/tokenizers-lib/examples/unstable_wasm/www/LICENSE-MIT %{buildroot}/usr/share/package-licenses/pypi-tokenizers/a25c803b2f97be0bb6d5b70ceeb2069b57640cc5 || :
 pip install --root=%{buildroot} --no-deps --ignore-installed dist/*.whl
@@ -572,14 +628,6 @@ popd
 %files
 %defattr(-,root,root,-)
 
-%files filemap
-%defattr(-,root,root,-)
-/usr/share/clear/filemap/filemap-pypi-tokenizers
-
-%files lib
-%defattr(-,root,root,-)
-/usr/share/clear/optimized-elf/other*
-
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/pypi-tokenizers/02bf11a87b9bbacedf2fcf4856af3b933faef82e
@@ -595,33 +643,34 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/0a1e89ac22450cb0311baa2613bc21b7131b321f
 /usr/share/package-licenses/pypi-tokenizers/0bc96c09b4b9635b10d73949dd06e92f22193c04
 /usr/share/package-licenses/pypi-tokenizers/11f0f1bee61ba6393c3dc7aefee7b92b604ff6c0
+/usr/share/package-licenses/pypi-tokenizers/13f55d9b7b3a769d76eab5d4a096f7ff24a017be
 /usr/share/package-licenses/pypi-tokenizers/144111aa0f14ef5a181326683aa9ebbd9252bca6
-/usr/share/package-licenses/pypi-tokenizers/14be3fb1db517b371b463625246427013600f126
+/usr/share/package-licenses/pypi-tokenizers/145c27c874c444c902ad2af6164fcc30231fa7a8
 /usr/share/package-licenses/pypi-tokenizers/1726596c1cc6c65d3a272abc337b13936430cf96
 /usr/share/package-licenses/pypi-tokenizers/1741e5596832e62cd0791301fc9dcf4b9d0bc2c9
 /usr/share/package-licenses/pypi-tokenizers/188be4108decf997e0edd21c6dd83deaf320f255
 /usr/share/package-licenses/pypi-tokenizers/18d7fe3c54698817feec1f2e04a9d5a0f046a80c
 /usr/share/package-licenses/pypi-tokenizers/1a00693a4e6240a4d040d1a1f76efaf50f20b8dd
 /usr/share/package-licenses/pypi-tokenizers/1d47c63586fe3be7f228cff1ab0c029b53741875
+/usr/share/package-licenses/pypi-tokenizers/1d8c93712cbc9117a9e55a7ff86cebd066c8bfd8
 /usr/share/package-licenses/pypi-tokenizers/1de935a6c7ea6a2196a49062d498cb04a7f5baea
 /usr/share/package-licenses/pypi-tokenizers/1e35cd39af07e5460de3011d5ef8f6a775ee54ae
-/usr/share/package-licenses/pypi-tokenizers/2111f90a2fa5afba10ae753c5ca31a1d8080f597
 /usr/share/package-licenses/pypi-tokenizers/218fc8c15534e8840cbff5801582c450c97869ab
 /usr/share/package-licenses/pypi-tokenizers/2243f7a86daaa727d34d92e987a741036f288464
 /usr/share/package-licenses/pypi-tokenizers/245c1d51cca7faae2e37a0e0c681efb8aa42bccf
 /usr/share/package-licenses/pypi-tokenizers/2510927d07430a2092720e8f4a5287043f75e8d3
 /usr/share/package-licenses/pypi-tokenizers/27541df8e6d877c3912bbe4c48711f36e826cc5b
 /usr/share/package-licenses/pypi-tokenizers/27ea6989d4f34b7b944eb884410a31ae20d11686
+/usr/share/package-licenses/pypi-tokenizers/28179ca174aa05f0650753d07751af071cf5ec61
 /usr/share/package-licenses/pypi-tokenizers/2a3318d3dc04226b8d24f0a3f4317d4701970001
 /usr/share/package-licenses/pypi-tokenizers/2ad1215c12bd0a3492399dc438aa63084323c662
 /usr/share/package-licenses/pypi-tokenizers/2b8b815229aa8a61e483fb4ba0588b8b6c491890
 /usr/share/package-licenses/pypi-tokenizers/2bf5cac862d5a0480b5d5bcd3a1852d68bfeee84
+/usr/share/package-licenses/pypi-tokenizers/33dbd2d99ad231460bbb01812a52c85e577bd9ba
 /usr/share/package-licenses/pypi-tokenizers/36d69bcb88153a640740000efe933b009420ce7e
 /usr/share/package-licenses/pypi-tokenizers/388871ab0ab7f8ba6aaa0d444a5153f15c918cdb
-/usr/share/package-licenses/pypi-tokenizers/3959acff889bf66bff1630df10056501ca03dae2
 /usr/share/package-licenses/pypi-tokenizers/3a86cfdfa553511b381388859c9e94ce9e1f916b
 /usr/share/package-licenses/pypi-tokenizers/3acad00f27f89710cd66d3f5528aed5046ac28d9
-/usr/share/package-licenses/pypi-tokenizers/3acde0578c32e432e7c72e1fd5f1a92553647873
 /usr/share/package-licenses/pypi-tokenizers/3aedaafe8ea8fce424d1df3be32d1b8816944e0e
 /usr/share/package-licenses/pypi-tokenizers/3b042d3d971924ec0296687efd50dbe08b734976
 /usr/share/package-licenses/pypi-tokenizers/3bdce0683ebc036dfcc97c65499ccd030c2f1f0d
@@ -636,6 +685,7 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/481e4be7d70c11ee3f6e04a59a0e5afccc551db2
 /usr/share/package-licenses/pypi-tokenizers/4c1c71430c0885114ef42fc256b803241cdcf898
 /usr/share/package-licenses/pypi-tokenizers/4c8990add9180fc59efa5b0d8faf643c9709501e
+/usr/share/package-licenses/pypi-tokenizers/4dbe8833d0189c691b308c3dd40fab84ef2e9630
 /usr/share/package-licenses/pypi-tokenizers/4f8ab673f6e2ae6c7bb2910d7f38838c18c12178
 /usr/share/package-licenses/pypi-tokenizers/50121d8b8c9f6483fe17ea679f28f85fe59b2a5a
 /usr/share/package-licenses/pypi-tokenizers/553e82bef8637312393c95bc62e23e8f81fd9e47
@@ -651,6 +701,7 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/5feaf15b3fa7d2d226d811e5fcd49098a1ea520c
 /usr/share/package-licenses/pypi-tokenizers/60146279cd817681c6ff6d37b99abfdc979b2b32
 /usr/share/package-licenses/pypi-tokenizers/60c3522081bf15d7ac1d4c5a63de425ef253e87a
+/usr/share/package-licenses/pypi-tokenizers/64a8c11fd0f3068e743bfc681bcbef4f50a6b779
 /usr/share/package-licenses/pypi-tokenizers/669a1e53b9dd9df3474300d3d959bb85bad75945
 /usr/share/package-licenses/pypi-tokenizers/689ec0681815ecc32bee639c68e7740add7bd301
 /usr/share/package-licenses/pypi-tokenizers/68d12a03b339648117165b9c021b93f26974d6f6
@@ -660,8 +711,7 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/6e5c4711bcae04967d7f5b5e01cf56ae03bebe7a
 /usr/share/package-licenses/pypi-tokenizers/70693ba8757c4a17af68e39ab32e4e0d4a389416
 /usr/share/package-licenses/pypi-tokenizers/70698c5cd94e53fcb69e4c61fc7e87d9f559c3fb
-/usr/share/package-licenses/pypi-tokenizers/70e36c2f54755e87728778c41ab4b809e5b0b502
-/usr/share/package-licenses/pypi-tokenizers/7293920aac55f4d275cef83ba10d706585622a53
+/usr/share/package-licenses/pypi-tokenizers/708e756c9120bcaf2c0a1d240b2418ee908e2d87
 /usr/share/package-licenses/pypi-tokenizers/73724f22eb580e208c5af2e3d089be349209e847
 /usr/share/package-licenses/pypi-tokenizers/738188f5fed28a950b0fede659706238ec35f8bb
 /usr/share/package-licenses/pypi-tokenizers/74b517ee278c2f4460fb9a56d63788ebab959aab
@@ -669,13 +719,17 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/7ca2c807379211b3ca6b04f10723088ca423c4fe
 /usr/share/package-licenses/pypi-tokenizers/7df059597099bb7dcf25d2a9aedfaf4465f72d8d
 /usr/share/package-licenses/pypi-tokenizers/7e5936a6fa3cf3518c01cec41345adf27399fe12
+/usr/share/package-licenses/pypi-tokenizers/7ed72f0e5fc0e0a58f758f7ac73425dc073732c7
+/usr/share/package-licenses/pypi-tokenizers/82da472f6d00dc5f0a651f33ebb320aa9c7b08d0
 /usr/share/package-licenses/pypi-tokenizers/86d193cb6b24df990cbbaf67c6a24fddbcb574c1
 /usr/share/package-licenses/pypi-tokenizers/871b9912ab96cf7d79cb8ae83ca0b08cd5d0cbfd
 /usr/share/package-licenses/pypi-tokenizers/8cc042e8e4b82c5532c72172a1988a74a599d4b5
 /usr/share/package-licenses/pypi-tokenizers/8e75077dab38548245db65153967207be8c3ce88
 /usr/share/package-licenses/pypi-tokenizers/8f178d4cc55689ebdd562cabb1282e33bf8f32fe
+/usr/share/package-licenses/pypi-tokenizers/8fe88f09d35c6054e0a780a793833c16fb888168
 /usr/share/package-licenses/pypi-tokenizers/91abce61ea0c1c313bb5ba31f04196490960a479
 /usr/share/package-licenses/pypi-tokenizers/92170cdc034b2ff819323ff670d3b7266c8bffcd
+/usr/share/package-licenses/pypi-tokenizers/93074692b8a28bef1743c44a9e5b97b1401c0d09
 /usr/share/package-licenses/pypi-tokenizers/96f019e8abadc7a87b330a697504d874a1c06268
 /usr/share/package-licenses/pypi-tokenizers/989c2981fcb981c61409ea38fa8d70cf5e6fd130
 /usr/share/package-licenses/pypi-tokenizers/9a2b6b4ad55ec42cf19fc686c74668d3a6303ae7
@@ -707,9 +761,12 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/cfcb552ef0afbe7ccb4128891c0de00685988a4b
 /usr/share/package-licenses/pypi-tokenizers/d27ef3ee8c433e848ca41075d018a1ad707e3c49
 /usr/share/package-licenses/pypi-tokenizers/d2cf9694021d7797696471bd8410ee4b83b0a93b
+/usr/share/package-licenses/pypi-tokenizers/d4fd358c142c0ce7553ff8266b871bae99e3052c
+/usr/share/package-licenses/pypi-tokenizers/d5e630eee1d3500039f2e16bed21d0f0cd580994
 /usr/share/package-licenses/pypi-tokenizers/d74ad13f1402c35008f22bc588a6b8199ed164d3
 /usr/share/package-licenses/pypi-tokenizers/dd445710e6e4caccc4f8a587a130eaeebe83f6f6
 /usr/share/package-licenses/pypi-tokenizers/ddf157bc55ed6dec9541e4af796294d666cd0926
+/usr/share/package-licenses/pypi-tokenizers/deea46b4a459a162af77a2b242e6b93a3c1db2f5
 /usr/share/package-licenses/pypi-tokenizers/e1c86f32641f01a5b85d6e9b20138e8470b883fc
 /usr/share/package-licenses/pypi-tokenizers/e6d32072ef5f584a805b429ecbd4eec428316dde
 /usr/share/package-licenses/pypi-tokenizers/e81567c196622efa36b46c5fd53cde741aaf0993
@@ -725,17 +782,22 @@ popd
 /usr/share/package-licenses/pypi-tokenizers/f14afa20edce530124d39cd56312c7781c19b267
 /usr/share/package-licenses/pypi-tokenizers/f498d95a48889a0b1432e420e6754881eff1d593
 /usr/share/package-licenses/pypi-tokenizers/f516ded20090880b5bb281ad2f9dde3d94e9e369
+/usr/share/package-licenses/pypi-tokenizers/f5feee4154156527645a9b18ef29da23fc859ca9
+/usr/share/package-licenses/pypi-tokenizers/f6f1c63a464536513df4052c4851922ade5adfed
 /usr/share/package-licenses/pypi-tokenizers/f85f58f2b17e35a1c2fd852cd58e5bae165ebea9
 /usr/share/package-licenses/pypi-tokenizers/f8cc03f90ea18587a80a23486a64f129260a3034
-/usr/share/package-licenses/pypi-tokenizers/f9cc84dfc567fdc0979fddc3e6257191d8ebc9d8
+/usr/share/package-licenses/pypi-tokenizers/f911b0506e6ba6a56b4edac717b461799f380ef0
 /usr/share/package-licenses/pypi-tokenizers/fa284d19a6ac85562019f93110d4338e53de654b
 /usr/share/package-licenses/pypi-tokenizers/ff007ce11f3ff7964f1a5b04202c4e95b5c82c85
 /usr/share/package-licenses/pypi-tokenizers/ff432d95fdfee3587e45abd61685c2209d245901
 /usr/share/package-licenses/pypi-tokenizers/ffd5a0caea8a089d58fb6acf5a4714dffb06d0dc
+/usr/share/package-licenses/pypi-tokenizers/ffe3aa1f76c00b737c79c3a17b9e30163a936bc0
+/usr/share/package-licenses/pypi-tokenizers/ffffe83fef2bd6576c95e851bc81e1f6a641d638
 
 %files python
 %defattr(-,root,root,-)
 
 %files python3
 %defattr(-,root,root,-)
+/V3/usr/lib/python3*/*
 /usr/lib/python3*/*
