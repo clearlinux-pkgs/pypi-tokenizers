@@ -1,5 +1,5 @@
 PKG_NAME := pypi-tokenizers
-URL = https://files.pythonhosted.org/packages/da/25/b1681c1c30ea3ea6e584ae3fffd552430b12faa599b558c4c4783f56d7ff/tokenizers-0.20.3.tar.gz
-ARCHIVES = $(CGIT_BASE_URL)/vendor/pypi-tokenizers/snapshot/pypi-tokenizers-2024-11-08-15-27-45.tar.gz ./vendor
+URL = https://files.pythonhosted.org/packages/20/41/c2be10975ca37f6ec40d7abd7e98a5213bb04f284b869c1a24e6504fd94d/tokenizers-0.21.0.tar.gz
+ARCHIVES = $(CGIT_BASE_URL)/vendor/pypi-tokenizers/snapshot/pypi-tokenizers-2025-01-30-21-14-21.tar.gz ./vendor
 
 include ../common/Makefile.common
